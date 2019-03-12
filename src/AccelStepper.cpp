@@ -384,12 +384,16 @@ void AccelStepper::step1(long step)
     (void)(step); // Unused
 
     // _pin[0] is step, _pin[1] is direction
-    setOutputPins(_direction ? 0b10 : 0b00); // Set direction first else get rogue pulses
-    setOutputPins(_direction ? 0b11 : 0b01); // step HIGH
+    //setOutputPins(_direction ? 0b10 : 0b00); // Set direction first else get rogue pulses
+    if (_direction) PORTD |= 1 << 4;
+    else PORTD &= ~(1 << 4);
+    //setOutputPins(_direction ? 0b11 : 0b01); // step HIGH
+    PORTD |= 1 << 5;
     // Caution 200ns setup time
     // Delay the minimum allowed pulse width
     delayMicroseconds(_minPulseWidth);
-    setOutputPins(_direction ? 0b10 : 0b00); // step LOW
+    //setOutputPins(_direction ? 0b10 : 0b00); // step LOW
+    PORTD &= ~(1 << 5);
 }
 
 
